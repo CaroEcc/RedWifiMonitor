@@ -13,6 +13,8 @@ Wants=network-online.target
 
 [Service]
 User=TU_USUARIO
+# Permite leer el registro del sistema (journalctl) para saber el motivo de cada corte de WiFi
+SupplementaryGroups=systemd-journal
 WorkingDirectory=/home/TU_USUARIO/inspeccion_red
 ExecStart=/home/TU_USUARIO/inspeccion_red/.venv/bin/python monitor.py
 Restart=always

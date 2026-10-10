@@ -9,7 +9,8 @@ env/
 
 # Archivos generados por el monitor
 *.log
-wifi_historial.csv
+wifi_historial*.csv
+incidentes.csv
 
 # Python
 __pycache__/

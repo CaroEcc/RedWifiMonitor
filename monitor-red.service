@@ -1,0 +1,23 @@
+# Servicio systemd para dejar el monitor corriendo en Linux.
+#
+# 1. Cambia TU_USUARIO y la ruta de la carpeta del proyecto.
+# 2. sudo cp monitor-red.service /etc/systemd/system/
+# 3. sudo systemctl daemon-reload
+# 4. sudo systemctl enable --now monitor-red
+# Ver lo que va pasando: journalctl -u monitor-red -f
+
+[Unit]
+Description=Monitor de red y WiFi
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=TU_USUARIO
+WorkingDirectory=/home/TU_USUARIO/inspeccion_red
+ExecStart=/home/TU_USUARIO/inspeccion_red/.venv/bin/python monitor.py
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

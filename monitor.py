@@ -16,6 +16,7 @@ import requests
 from dotenv import load_dotenv
 
 from wifi import EstadoWifi, leer_wifi, puerta_de_enlace
+from wifi import soportado as wifi_soportado
 
 load_dotenv()
 
@@ -171,6 +172,7 @@ class MonitorWifi:
         self.anterior: EstadoWifi | None = None
         self.desconectado_desde: float | None = None
         self.senal_debil = False
+        self.sin_interfaz = False
         # El router de la red actual se revisa por ping como un equipo más
         self.router = Equipo("Router WiFi", "")
 
@@ -197,10 +199,12 @@ class MonitorWifi:
     def revisar(self) -> EstadoWifi | None:
         e = leer_wifi()
         if e is None:
-            if self.anterior is not None:
-                log.info("No se encontró ninguna interfaz WiFi")
+            if not self.sin_interfaz:
+                log.info("No se encontró ninguna interfaz WiFi (en Linux hace falta tener iw o nmcli)")
+                self.sin_interfaz = True
             self.anterior = None
             return None
+        self.sin_interfaz = False
 
         a = self.anterior
         if not e.conectado:
@@ -245,10 +249,10 @@ def main() -> None:
     equipos = cargar_equipos()
     wifi = None
     if MONITOREAR_WIFI:
-        if SISTEMA == "windows":
+        if wifi_soportado():
             wifi = MonitorWifi()
         else:
-            log.info("El monitoreo de WiFi solo está disponible en Windows; se omite")
+            log.info("El monitoreo de WiFi solo está disponible en Windows y Linux; se omite")
 
     log.info(f"Monitoreando {len(equipos)} equipos{' + WiFi' if wifi else ''} cada {INTERVALO:g}s (Ctrl+C para salir)")
     if not (TELEGRAM_TOKEN and TELEGRAM_CHAT_ID):

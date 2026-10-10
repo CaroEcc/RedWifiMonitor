@@ -1,0 +1,25 @@
+# Entorno virtual
+.venv/
+venv/
+env/
+
+# Configuración con secretos (token de Telegram). La plantilla .env.example sí se sube
+.env
+!.env.example
+
+# Archivos generados por el monitor
+*.log
+wifi_historial.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Editor y sistema operativo
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
